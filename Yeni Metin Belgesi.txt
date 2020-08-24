@@ -1,0 +1,12 @@
+- serilog implementation for logging
+- asp.net core 3.1 angular 8
+- JWT for athentication
+- Aspect oriented
+- Inmemory database
+- ef for orm
+- signalr
+- fluent validation
+- Automapper
+- Custom validation filter
+- Global exception handler
+- docker support
