@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { User } from '../models/user';
 import { Router } from '@angular/router';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable()
 export class AuthService {
@@ -26,7 +27,10 @@ export class AuthService {
   doLogin(value) {
     return this.http.post<any>(`${environment.apiUrl}/auth/login`, value)
       .pipe(map(user => {
+       
         if (user) {
+
+         
           localStorage.setItem('currentUser', JSON.stringify(user));
           this.currentUserSubject.next(user);
           return user;
@@ -45,6 +49,7 @@ export class AuthService {
   doLogout() {
     localStorage.removeItem('currentUser');
     this.router.navigate(['/']);
+    this.currentUser=null;
   }
 
 

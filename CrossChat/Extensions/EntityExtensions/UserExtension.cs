@@ -11,6 +11,7 @@ namespace CrossChat.Extensions.EntityExtensions
     {
         public static User CreateUser(this User u,UserToCreateDto model)
         {
+            u.Id = Guid.NewGuid().ToString();
             u.Email = model.Email;
             u.Name = model.Name;
             u.Surname = model.Surname;

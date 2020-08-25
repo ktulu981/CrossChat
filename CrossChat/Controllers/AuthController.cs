@@ -40,8 +40,10 @@ namespace CrossChat.Controllers
             {
                 var key = Encoding.ASCII.GetBytes(_configuration.GetSection("AppSettings:Token").Value);
                 UserDto userDto = _mapper.Map<UserDto>(user);
-                var token = HelperMethods.CreateJWT(key, userDto);
-                return Ok(token);
+                userDto.Token = HelperMethods.CreateJWT(key, userDto);
+
+
+                return Ok(userDto);
             }
             catch (Exception ex)
             {
@@ -51,7 +53,7 @@ namespace CrossChat.Controllers
         }
 
 
-
+        [HttpPost("register")]
         public async Task<IActionResult> Register(UserToCreateDto model)
         {
             var user = new User();

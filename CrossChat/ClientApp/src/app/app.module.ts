@@ -9,20 +9,20 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
+
 import { ProfileComponent } from './Profile/Profile.component';
 import { LoginComponent } from './Login/Login.component';
 import { ChatComponent } from './chat/chat.component';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { JwtInterceptor } from './helpers/jwt.intercepter';
+import { AuthGuard } from './guards/auth.guard';
 @NgModule({
   declarations: [	
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    CounterComponent,
-    FetchDataComponent,
+   
       ProfileComponent,
       LoginComponent,
       RegisterComponent,
@@ -39,10 +39,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
-      { path: 'chat', component: ChatComponent },
+      { path: 'chat', component: ChatComponent, canActivate: [AuthGuard] },
     ])
   ],
-  providers: [AuthService],
+  providers: [AuthService,
+    AuthGuard,
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

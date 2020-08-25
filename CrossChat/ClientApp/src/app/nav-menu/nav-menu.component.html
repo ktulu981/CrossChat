@@ -27,16 +27,34 @@
           >
             <a class="nav-link text-dark" [routerLink]="['/']">Home</a>
           </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/login']"
-              >Login</a
-            >
-          </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/register']"
-              >Register</a
-            >
-          </li>
+        
+
+         
+            <li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="isLoggedIn$ | async">
+              <a class="nav-link text-dark" [routerLink]="['/chat']"
+                >Chat</a
+              >
+            </li>
+            <li class="nav-item" >
+              <a class="nav-link text-dark" style="cursor: pointer;" (click)="logOut()" *ngIf="isLoggedIn$ | async"
+                >Logout</a
+              >
+            </li>
+      
+      
+            <li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="!(isLoggedIn$ | async)">
+              <a class="nav-link text-dark" [routerLink]="['/login']"
+                >Login</a
+              >
+            </li>
+            <li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="!(isLoggedIn$ | async)">
+              <a class="nav-link text-dark" [routerLink]="['/register']"
+                >Register</a
+              >
+            </li>
+       
+         
+         
         </ul>
       </div>
     </div>

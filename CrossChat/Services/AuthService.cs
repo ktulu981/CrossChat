@@ -45,18 +45,27 @@ namespace CrossChat.Services
                 throw new Exception("User already exists");
             }
 
-            byte[] passwordHash, passwordSalt;
-            HelperMethods.CreateHash(password, out passwordHash, out passwordSalt);
-            u.PasswordHash = passwordHash;
-            u.PasswordSalt = passwordSalt;
-
-            await _context.Users.AddAsync(u);
-            var result=  await _context.SaveChangesAsync();
-            if (result > 0)
+            try
             {
-                return u;
+                byte[] passwordHash, passwordSalt;
+                HelperMethods.CreateHash(password, out passwordHash, out passwordSalt);
+                u.PasswordHash = passwordHash;
+                u.PasswordSalt = passwordSalt;
+
+                await _context.Users.AddAsync(u);
+                var result = await _context.SaveChangesAsync();
+                if (result > 0)
+                {
+                    return u;
+                }
+                throw new Exception("Database error!");
             }
-            throw new Exception("Database error!");
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+           
         }
     }
 }

@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      username: ["", Validators.required],
+      username: ["", [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]],
       password: ["", Validators.required],
     });
 
@@ -43,9 +43,11 @@ export class LoginComponent implements OnInit {
 
     this.authService.doLogin(value).subscribe(
       res => {
+       console.log(res);
         this.router.navigate(["/chat"]);
       },
       err => {
+        console.log(err);
         this.toastr.error('Login Failed', 'Error');
         this.loading = false;
         this.loginForm.reset();

@@ -36,6 +36,7 @@ namespace CrossChat
             var key = Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value);
 
             services.AddDbContext<CrossChatDbContext>(options => options.UseInMemoryDatabase(databaseName: "CrossChat"));
+            services.AddScoped<CrossChatDbContext>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddAutoMapper(typeof(Startup));
             services.AddControllersWithViews();

@@ -6,6 +6,9 @@
      <div class="form-group">
        <label>Email</label>
        <input type="email" formControlName="username" class="form-control" placeholder="Email" required>
+       <div *ngIf="(f.username.invalid && f.username.touched) || f.username.dirty">
+        <small *ngIf="f.username.errors?.pattern" class="text-danger">Please provide a valid email address</small>
+      </div>
      </div>
 
      <div class="form-group">
