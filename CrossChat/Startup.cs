@@ -2,6 +2,7 @@ using AutoMapper;
 using CrossChat.Core.Services;
 using CrossChat.DataAccess;
 using CrossChat.DataAccess.Seeder;
+using CrossChat.Hubs;
 using CrossChat.Middlewares;
 using CrossChat.Middlewares.ActionFilters;
 using CrossChat.Services;
@@ -40,7 +41,7 @@ namespace CrossChat
             services.AddScoped<IAuthService, AuthService>();
             services.AddAutoMapper(typeof(Startup));
             services.AddControllersWithViews();
-
+            services.AddSignalR();
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
@@ -69,6 +70,8 @@ namespace CrossChat
                 };
 
             });
+
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -91,14 +94,17 @@ namespace CrossChat
             {
                 app.UseSpaStaticFiles();
             }
-            app.UseAuthentication();
-            app.UseRouting();
+         
 
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
+                endpoints.MapHub<MessageHub>("/MessageHub");
             });
 
             app.UseSpa(spa =>

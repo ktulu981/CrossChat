@@ -16,5 +16,8 @@ namespace CrossChat.DataAccess
 
 
         public DbSet<User>  Users { get; set; }
+        public DbSet<Channel> Channels { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<ChannelUser> ChannelUsers { get; set; }
     }
 }

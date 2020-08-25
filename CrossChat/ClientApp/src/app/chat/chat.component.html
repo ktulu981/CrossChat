@@ -2,37 +2,58 @@
 <div class="col-md-3 " >
   <div class="row h-100" style="margin-bottom:100px;padding:10px;overflow-y: scroll;">
     <div class="col-md-12">
-      <h5>
-        Channels
-      </h5>
+      <ul class="list-group">
+        <li class="list-group-item active">My Channels <span class="pull-right" title="Add Channel" (click)="AddChannel()">+</span></li>
+        <li class="list-group-item" *ngFor="let m of myChannels">{{m.Name}}  - <span style="cursor:pointer;color:green;font-weight: bold;"  title="Join Channel" (click)="Join(m)"> Join</span> <i title="Delete Channel" class="fa fa-trash pull-right" (click)="DeleteChannel(m.Id)"></i></li>
+        
+      </ul>
+
+      <ul class="list-group mt-5">
+        <li class="list-group-item active">All Channels</li>
+        <li class="list-group-item" *ngFor="let m of channels">{{m.Name}}   - <span  style="cursor:pointer;color:green;font-weight: bold;" title="Join Channel" (click)="Join(m)"> Join</span> </li>
+        
+      </ul>
     </div>
   </div>
 
 </div>
 <div class="col-md-9">
 <div class="row">
-<div class="col-md-9">
-  <ul class="nav nav-tabs">
-    <li class="nav-item">
-      <a class="nav-link active" href="#">Channel1</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Channel2</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Channel3</a>
-    </li>
+<div class="col-md-12">
+  <ngb-tabset>
+    <ngb-tab *ngFor="let t of openChannels" (click)="activeChannel=t">
+      <ng-template ngbTabTitle>{{t.Name}}</ng-template>
+      <ng-template ngbTabContent>
+      <div class="row">
+        <div class="col-md-9" style="border-right: 1px solid gray;min-height: 400px;">
+          <h5 style="margin-top:50px;">Channel Messages</h5>
+          <ul>
+            <li *ngFor="let m of t.Messages">
+                <b>{{m.Sender.Name}} :</b> {{m.Content}}
+            </li>
+          </ul>
+        </div>
+        <div class="col-md-3">
+          <h5 style="margin-top:50px;">Channel Users</h5>
+          <ul>
+            <li *ngFor="let u of t.ChannelUsers">
+              {{u.User.Name+" " + u.User.Surname}}
+            </li>
+          </ul>
+        </div>
+      </div>
+      </ng-template>
+    </ngb-tab>
    
-  </ul>
+  </ngb-tabset>
 </div>
-<div class="col-md-3">
-  <h5 style="margin-top:50px;">Channel Users</h5>
-</div>
+
 </div>
 <div class="row">
   <div class="col-md-6" style="position: fixed; bottom: 0;">
 
-    <input id="m" autocomplete="off" class="form-control-custom" style="width: 80%;"/><button class="btn btn-primary">Send</button>
+    <input id="m" autocomplete="off" class="form-control-custom" style="width: 80%;" [value]="txtMessage"  
+    (input)="txtMessage=$event.target.value" (keydown.enter)="SendMessage()"/><button class="btn btn-primary" [disabled]="activeChannel==null" (click)="SendMessage()">Send</button>
  </div>
 </div>
 </div>

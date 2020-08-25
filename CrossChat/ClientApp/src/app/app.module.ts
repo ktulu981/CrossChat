@@ -1,3 +1,5 @@
+import { AddchatComponent } from './chat/addchat/addchat.component';
+import { ChannelService } from './chat/channel.service';
 import { AuthService } from './services/auth.service';
 import { RegisterComponent } from './Register/Register.component';
 import { BrowserModule } from '@angular/platform-browser';
@@ -5,7 +7,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
@@ -26,7 +28,8 @@ import { AuthGuard } from './guards/auth.guard';
       ProfileComponent,
       LoginComponent,
       RegisterComponent,
-      ChatComponent
+      ChatComponent,
+      AddchatComponent
    ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -34,6 +37,7 @@ import { AuthGuard } from './guards/auth.guard';
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    NgbModule,
     ToastrModule.forRoot(),
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -42,9 +46,12 @@ import { AuthGuard } from './guards/auth.guard';
       { path: 'chat', component: ChatComponent, canActivate: [AuthGuard] },
     ])
   ],
-  providers: [AuthService,
+  providers: [
+    AuthService,
     AuthGuard,
+    ChannelService,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [AddchatComponent]
 })
 export class AppModule { }
