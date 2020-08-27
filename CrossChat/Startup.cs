@@ -18,7 +18,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CrossChat
 {
@@ -41,7 +44,9 @@ namespace CrossChat
             services.AddScoped<IAuthService, AuthService>();
             services.AddAutoMapper(typeof(Startup));
             services.AddControllersWithViews();
-            services.AddSignalR();
+            services.AddSignalR().AddJsonProtocol(options => {
+                options.PayloadSerializerOptions.PropertyNamingPolicy = null;
+                 });
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
@@ -105,6 +110,7 @@ namespace CrossChat
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
                 endpoints.MapHub<MessageHub>("/MessageHub");
+                endpoints.MapHub<ChannelHub>("/ChannelHub");
             });
 
             app.UseSpa(spa =>

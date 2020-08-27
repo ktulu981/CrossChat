@@ -1,3 +1,4 @@
+import { ChatService } from './chat/chat.service';
 import { AddchatComponent } from './chat/addchat/addchat.component';
 import { ChannelService } from './chat/channel.service';
 import { AuthService } from './services/auth.service';
@@ -19,6 +20,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JwtInterceptor } from './helpers/jwt.intercepter';
 import { AuthGuard } from './guards/auth.guard';
+import { JoinService } from './chat/join.service';
 @NgModule({
   declarations: [	
     AppComponent,
@@ -49,6 +51,8 @@ import { AuthGuard } from './guards/auth.guard';
   providers: [
     AuthService,
     AuthGuard,
+    ChatService,
+    JoinService,
     ChannelService,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },],
   bootstrap: [AppComponent],

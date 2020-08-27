@@ -41,9 +41,38 @@ namespace CrossChat.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var response = await _context.Channels.Include(x=>x.ChannelUsers).ThenInclude(y=>y.User).Include(x=>x.Messages).ThenInclude(y=>y.Sender).FirstOrDefaultAsync();
+            var response = await _context.Channels.Include(x=>x.ChannelUsers).ThenInclude(y=>y.User).Include(x=>x.Messages).ThenInclude(y=>y.Sender).FirstOrDefaultAsync(x=>x.Id==id);
 
             return Ok(response);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("join/{id}")]
+        public async Task<IActionResult> Join(string id)
+        {
+            if (User.FindFirst(ClaimTypes.NameIdentifier) == null)
+            {
+                return BadRequest();
+            }
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+
+            var user =await _context.ChannelUsers.Where(x => x.UserId == userId && x.ChannelId == id).FirstOrDefaultAsync();
+            if (user != null)
+                return BadRequest();
+    
+                var channelUser = new ChannelUser()
+            {
+                ChannelId = id,
+                UserId = userId
+            };
+
+            _context.ChannelUsers.Add(channelUser);
+            await _context.SaveChangesAsync();
+
+            var channel = await _context.Channels.Include(x => x.ChannelUsers).ThenInclude(y => y.User).Include(x => x.Messages).ThenInclude(y => y.Sender).FirstOrDefaultAsync(x => x.Id == id);
+            return Ok(channelUser);
         }
 
         [HttpPost]

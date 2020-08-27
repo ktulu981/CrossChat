@@ -1,6 +1,9 @@
 ﻿using CrossChat.DataAccess;
+using CrossChat.Dto;
 using CrossChat.Entities;
+using CrossChat.Extensions.EntityExtensions;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +18,25 @@ namespace CrossChat.Hubs
         {
             _context = context;
         }
-        public async Task NewMessage(Message msg)
+        public async Task NewMessage(MessageCreateDto msg)
         {
-            _context.Messages.Add(msg);
-            await _context.SaveChangesAsync();
+            var mesaj = new Message();
+            try
+            {
+                mesaj.CreateMessage(msg);
+                _context.Messages.Add(mesaj);
+                await _context.SaveChangesAsync();
+                mesaj = await _context.Messages.Include(x => x.Sender).FirstOrDefaultAsync(x => x.Id == mesaj.Id);
 
+            }
+            catch (Exception ex)
+            {
+
+                
+            }
+           
             if (Clients != null)
-                await Clients.All.SendAsync("ReceiveMessage", msg);
+                await Clients.All.SendAsync("MessageReceived", mesaj);
            
         }
     }

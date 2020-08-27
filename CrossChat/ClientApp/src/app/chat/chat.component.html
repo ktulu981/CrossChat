@@ -3,7 +3,7 @@
   <div class="row h-100" style="margin-bottom:100px;padding:10px;overflow-y: scroll;">
     <div class="col-md-12">
       <ul class="list-group">
-        <li class="list-group-item active">My Channels <span class="pull-right" title="Add Channel" (click)="AddChannel()">+</span></li>
+        <li class="list-group-item active">My Channels <span class="pull-right" title="Add Channel" (click)="AddChannel()">+ Add</span></li>
         <li class="list-group-item" *ngFor="let m of myChannels">{{m.Name}}  - <span style="cursor:pointer;color:green;font-weight: bold;"  title="Join Channel" (click)="Join(m)"> Join</span> <i title="Delete Channel" class="fa fa-trash pull-right" (click)="DeleteChannel(m.Id)"></i></li>
         
       </ul>
@@ -19,34 +19,42 @@
 </div>
 <div class="col-md-9">
 <div class="row">
-<div class="col-md-12">
-  <ngb-tabset>
-    <ngb-tab *ngFor="let t of openChannels" (click)="activeChannel=t">
-      <ng-template ngbTabTitle>{{t.Name}}</ng-template>
-      <ng-template ngbTabContent>
-      <div class="row">
-        <div class="col-md-9" style="border-right: 1px solid gray;min-height: 400px;">
-          <h5 style="margin-top:50px;">Channel Messages</h5>
-          <ul>
-            <li *ngFor="let m of t.Messages">
-                <b>{{m.Sender.Name}} :</b> {{m.Content}}
-            </li>
-          </ul>
-        </div>
-        <div class="col-md-3">
-          <h5 style="margin-top:50px;">Channel Users</h5>
-          <ul>
-            <li *ngFor="let u of t.ChannelUsers">
-              {{u.User.Name+" " + u.User.Surname}}
-            </li>
-          </ul>
-        </div>
-      </div>
-      </ng-template>
-    </ngb-tab>
-   
-  </ngb-tabset>
-</div>
+  <div class="col-md-12">
+
+    <ul ngbNav #nav="ngbNav" [(activeId)]="activeChannel" class="nav-tabs">
+      <li *ngFor="let t of openChannels" [ngbNavItem]="t">
+        <a ngbNavLink>
+          {{t.Name}}
+          <span class="close position-relative pl-2 font-weight-light" (click)="LeaveChannel($event,t.Id)">×</span>
+        </a>
+        <ng-template ngbNavContent>
+          <div class="row">
+            <div class="col-md-9" style="border-right: 1px solid gray;min-height: 400px;">
+              <h5 style="margin-top:50px;">Channel Messages</h5>
+              <ul>
+                <li *ngFor="let m of t.Messages">
+                  <span [style.float]="m.SenderId==user.Id?'right':'left'"><span *ngIf="m.SenderId!=user.Id">{{m.Sender.Name}}: </span>{{m.Content}}</span>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-3">
+              <h5 style="margin-top:50px;">Channel Users</h5>
+              <ul>
+                <li *ngFor="let u of t.ChannelUsers">
+                  {{u.User.Name+" " + u.User.Surname}}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </ng-template>
+      </li>
+
+    </ul>
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+
+
+  </div>
 
 </div>
 <div class="row">

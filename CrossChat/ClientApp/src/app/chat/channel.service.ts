@@ -25,6 +25,11 @@ import { environment } from '../../environments/environment';
         return this.httpClient.get<any>(`${environment.apiUrl}/channel/${id}`);
     }
 
+    joinChannel(id: string): Observable<any> {
+
+    return this.httpClient.get<any>(`${environment.apiUrl}/channel/join/${id}`);
+  }
+
    
 
     addChannel(channel: any): Observable<any>{
